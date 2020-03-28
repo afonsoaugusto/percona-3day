@@ -83,50 +83,17 @@ mysql> show slave status\G
 SELECT * FROM `myapp` . `joinit` UNION SELECT * FROM `myapp` . `joinit2`;
 
 /*
-mysql> explain SELECT * FROM `myapp`.`joinit` UNION SELECT * FROM `myapp`.`joinit2`\G
-*************************** 1. row ***************************
-           id: 1
-  select_type: PRIMARY
-        table: joinit
-   partitions: NULL
-         type: ALL
-possible_keys: NULL
-          key: NULL
-      key_len: NULL
-          ref: NULL
-         rows: 1044064
-     filtered: 100.00
-        Extra: NULL
-*************************** 2. row ***************************
-           id: 2
-  select_type: UNION
-        table: joinit2
-   partitions: NULL
-         type: ALL
-possible_keys: NULL
-          key: NULL
-      key_len: NULL
-          ref: NULL
-         rows: 1043802
-     filtered: 100.00
-        Extra: NULL
-*************************** 3. row ***************************
-           id: NULL
-  select_type: UNION RESULT
-        table: <union1,2>
-   partitions: NULL
-         type: ALL
-possible_keys: NULL
-          key: NULL
-      key_len: NULL
-          ref: NULL
-         rows: NULL
-     filtered: NULL
-        Extra: Using temporary
-3 rows in set, 1 warning (0.03 sec)
+# Para a primeira querie em questão é indicado que o procedimento que utilize ela seja reescrito.
 
+tendo ela em vista que é necessário considerar:
+
+* A tabela joinit e joinit2 posssuem dados unicos ou não (se unico, é recomendavel utilizar UNION ALL)
+* Os registros são removidos ou atualizados, ou somente temos novos registros?
+* A utilização posterior da consulta necessida de todos os dados no intervalo atual que a mesma é executada ou este intervalo pode ser espaçado?
 */
+```
 
+```sql
 -- 2
 SELECT `i` FROM `myapp` . `joinit2` WHERE `i` IN (...);
 
@@ -178,7 +145,9 @@ possible_keys: idx_i
 -- Foi alterado em tempo de execução o maximo de conexões.
 
 DROP INDEX idx_i ON myapp.joinit2;
+```
 
+```sql
 -- 3
 DELETE FROM `sbtest8` WHERE `id` = ?
 
@@ -221,7 +190,9 @@ possible_keys: PRIMARY
 1 row in set (0.00 sec)
 
 */
+```
 
+```sql
 -- 4
 UPDATE `sbtest8` SET `k` = `k` + ? WHERE `id` = ?
 explain UPDATE `sbtest8` SET `k` = `k` + 483084 WHERE `id` = 1;
@@ -274,7 +245,9 @@ Index_comment:
 Index_comment:
 2 rows in set (0.01 sec)
 */
+```
 
+```sql
 -- 5
 UPDATE `sbtest8` SET `c` = ? WHERE `id` = ?
 explain UPDATE `sbtest8` SET `c` ='66279278725-55619837129-95438588440-91045437497-61721550742-61179991680-98693015760-91031427011-20851715491-25173287270' WHERE `id` = 1;
@@ -297,7 +270,6 @@ possible_keys: PRIMARY
 1 row in set (0.01 sec)
 
 */
-
 ```
 
 ### Downtime no servidores replica e master
