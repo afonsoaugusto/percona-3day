@@ -89,7 +89,9 @@ tendo ela em vista que é necessário considerar:
 
 * A tabela joinit e joinit2 posssuem dados unicos ou não (se unico, é recomendavel utilizar UNION ALL)
 * Os registros são removidos ou atualizados, ou somente temos novos registros?
-* A utilização posterior da consulta necessida de todos os dados no intervalo atual que a mesma é executada ou este intervalo pode ser espaçado?
+* A utilização posterior da consulta necessida de todos os dados no intervalo atual que a mesma é 
+* executada ou este intervalo pode ser espaçado?
+
 */
 ```
 
